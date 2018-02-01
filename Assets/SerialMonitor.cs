@@ -17,17 +17,17 @@ using System.IO.Ports;
  */
 
 public class SerialMonitor : MonoBehaviour {
+	[Tooltip("Serial Port")]
 	public string serialPort = "/dev/ttyACM0"; // Windows ports are enumerated as "COM1", "COM3", "COM4", etc..
+	[Tooltip("Serial Baud Rate")]
 	public int serialBaudRate = 115200;
+	[Tooltip("Serial Read Timeout")]
 	public int serialReadTimeout = 50;
 	public System.IO.Ports.SerialPort stream = null;
 
 	// Use this for initialization
 	void Start () {
-		stream = new SerialPort (serialPort, serialBaudRate);
-		stream.ReadTimeout = serialReadTimeout;
-
-		stream.Open ();
+		
 	}
 
 	// Update is called once per frame
@@ -35,7 +35,18 @@ public class SerialMonitor : MonoBehaviour {
 		
 	}
 
-	public string read (int timeout = 0) {
+	public void Open() {
+		stream = new SerialPort (serialPort, serialBaudRate);
+		stream.ReadTimeout = serialReadTimeout;
+
+		stream.Open ();
+	}
+
+	public void Close() {
+		stream.Close ();
+	}
+
+	public string Read (int timeout = 0) {
 		stream.ReadTimeout = timeout || serialReadTimeout;
 
 		try {
@@ -46,7 +57,7 @@ public class SerialMonitor : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator readAsync(Action<string> callback, Action fail = null, float timeout = float.PositiveInfinity) {
+	public IEnumerator ReadAsync(Action<string> callback, Action fail = null, float timeout = float.PositiveInfinity) {
 		DateTime initialTime = DateTime.Now;
 		DateTime nowTime;
 		TimeSpan diff = default(TimeSpan);
