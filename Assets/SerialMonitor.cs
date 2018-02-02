@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using System.IO.Ports;
 
 /**
@@ -18,12 +18,12 @@ using System.IO.Ports;
 
 public class SerialMonitor : MonoBehaviour {
 	[Tooltip("Serial Port")]
-	public string serialPort = "/dev/ttyACM0"; // Windows ports are enumerated as "COM1", "COM3", "COM4", etc..
+	public static string serialPort = "/dev/ttyACM0"; // Windows ports are enumerated as "COM1", "COM3", "COM4", etc..
 	[Tooltip("Serial Baud Rate")]
-	public int serialBaudRate = 115200;
+	public static int serialBaudRate = 115200;
 	[Tooltip("Serial Read Timeout")]
-	public int serialReadTimeout = 50;
-	public System.IO.Ports.SerialPort stream = null;
+	public static int serialReadTimeout = 50;
+	public static System.IO.Ports.SerialPort stream = null;
 
 	// Use this for initialization
 	void Start () {
@@ -35,29 +35,34 @@ public class SerialMonitor : MonoBehaviour {
 		
 	}
 
-	public void Open() {
+	public static void Open() {
 		stream = new SerialPort (serialPort, serialBaudRate);
 		stream.ReadTimeout = serialReadTimeout;
 
 		stream.Open ();
 	}
 
-	public void Close() {
+	public static bool IsOpen() {
+		return stream.IsOpen;
+	}
+
+	public static void Close() {
 		stream.Close ();
 	}
 
-	public string Read (int timeout = 0) {
-		stream.ReadTimeout = timeout || serialReadTimeout;
+	public static string Read () {
+		stream.ReadTimeout = serialReadTimeout;
 
 		try {
 			return stream.ReadLine();
 		} catch (TimeoutException te) {
 			Debug.Log("SerialMonitor.read() A timeout exception occurred");
+			Debug.Log (te);
 			return null;
 		}
 	}
 
-	public IEnumerator ReadAsync(Action<string> callback, Action fail = null, float timeout = float.PositiveInfinity) {
+	public static IEnumerator ReadAsync(Action<string> callback, Action fail = null, float timeout = float.PositiveInfinity) {
 		DateTime initialTime = DateTime.Now;
 		DateTime nowTime;
 		TimeSpan diff = default(TimeSpan);
