@@ -72,8 +72,9 @@ public class SerialMonitor : MonoBehaviour {
 		do {
 			try {
 				dataString = stream.ReadLine();
-			} catch (TimeoutException) {
-				Debug.Log("SerialMonitor.readAsync() A timeout exception occurred");
+			} catch (TimeoutException te) {
+				Debug.Log("SerialMonitor.readAsync() A timeout exception occurred" + te.ToString());
+
 				dataString = null;
 			}
 
