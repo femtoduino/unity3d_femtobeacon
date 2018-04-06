@@ -69,9 +69,9 @@ public class FemtoBeaconDongle : MonoBehaviour {
 
 			// Update our euler values!
 
-			eulerX = float.Parse(euler1);
-			eulerY = float.Parse(euler2);
-			eulerZ = float.Parse(euler3);
+			eulerX = float.Parse(euler3);
+			eulerY = float.Parse(euler1);
+			eulerZ = float.Parse(euler2);
 		}
 	}
 
